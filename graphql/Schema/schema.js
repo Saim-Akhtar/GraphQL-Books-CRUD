@@ -26,6 +26,12 @@ const AuthorType = new GraphQLObjectType({
     fields:()=>({
         id:{type: new GraphQLNonNull(GraphQLID)},
         name:{type: new GraphQLNonNull(GraphQLString)},
+        books:{
+            type: new GraphQLList(BookType),
+            resolve:(parent,args)=>{
+                return resolvers.getBooksByAuthorId(parent.id)
+            }
+        }
     })
 })
 
@@ -61,7 +67,19 @@ const RootQuery=new GraphQLObjectType({
         books:{
             type: new GraphQLList(BookType),
             resolve:(parent,args)=>resolvers.getAllBooks()
+        },
+        author:{
+            type: AuthorType,
+            args: { id: { type: GraphQLID}},
+            resolve:(parent,args)=> resolvers.getAuthorById(args.id)
         }
+    })
+})
+
+const inputPublishType= new GraphQLInputObjectType({
+    name:"PublishInput",
+    fields:()=>({
+        date:{type: new GraphQLNonNull(GraphQLString)},
     })
 })
 
@@ -71,7 +89,10 @@ const inputBookType=new GraphQLInputObjectType({
         id:{type: new GraphQLNonNull(GraphQLID)},
         name:{type: new GraphQLNonNull(GraphQLString)},
         genre:{type: new GraphQLNonNull(GraphQLString)},
-        authorId:{type: new GraphQLNonNull(GraphQLID)}
+        authorId:{type: new GraphQLNonNull(GraphQLID)},
+        publish:{
+            type: new GraphQLNonNull(inputPublishType),
+        }
     })
 })
 

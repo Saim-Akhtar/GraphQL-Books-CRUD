@@ -11,7 +11,12 @@ module.exports={
         return books.find(b=>b.id == id)
     },
     addBook:input=>{
-        books.push(input)
+        console.log("Adding book")
+        const {id, name, genre, authorId, publish}= input
+
+        books.push({id, name, genre, authorId})
+        publish.book_publish_id=id
+        publishList.push(publish)
         return input
     },
     deleteBook:id=>{
@@ -28,5 +33,9 @@ module.exports={
         publish=publishList.find(p=> p.book_publish_id == id)
         console.log(publish)
         return publish
+    },
+    getBooksByAuthorId:id=>{
+        console.log("Books By Author Id: ",id)
+        return books.filter(b=>b.authorId == id)
     }
 }
