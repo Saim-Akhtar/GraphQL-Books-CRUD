@@ -14,10 +14,6 @@ const app=express()
 
 app.use(bodyParser.json())
 
-// app.get('/',(req,res,next)=>{
-//     res.send("Welcome To Graph API")
-// })
-
 const apolloServer = new ApolloServer({
     schema: schema,
     playground: true,
