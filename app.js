@@ -6,6 +6,9 @@ const { createServer } = require('http')
 
 const schema=require('./graphql/Schema/schema')
 
+require('dotenv').config()
+
+require('./graphql/db/config')
 
 const app=express()
 
