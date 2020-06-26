@@ -47,12 +47,12 @@ const BookType=new GraphQLObjectType({
                 return resolvers.getAuthorById(parent.authorId)
             }
         },
-        publish:{
-            type: PublishType,
-            resolve:(parent,args)=>{
-                return resolvers.getPublishById(parent.id)
-            }
-        }
+        // publish:{
+        //     type: PublishType,
+        //     resolve:(parent,args)=>{
+        //         return resolvers.getPublishById(parent.id)
+        //     }
+        // }
     })
 })
 
