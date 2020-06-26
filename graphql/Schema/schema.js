@@ -1,5 +1,6 @@
 const graphql=require('graphql')
-const resolvers=require('../Resolver/resolvers')
+const AuthorResolvers=require('../Resolver/AuthorResolver');
+const AuthorResolver = require('../Resolver/AuthorResolver');
 
 const {
     GraphQLObjectType,
@@ -71,7 +72,11 @@ const RootQuery=new GraphQLObjectType({
         author:{
             type: AuthorType,
             args: { id: { type: GraphQLID}},
-            resolve:(parent,args)=> resolvers.getAuthorById(args.id)
+            resolve:(parent,args)=> AuthorResolvers.getAuthorById(args.id)
+        },
+        authors:{
+            type: GraphQLList(AuthorType),
+            resolve:(parent,args)=>AuthorResolvers.getAllAuthors()
         }
     })
 })
@@ -83,22 +88,35 @@ const inputPublishType= new GraphQLInputObjectType({
     })
 })
 
+const inputAuthorType= new GraphQLInputObjectType({
+    name:"AuthorInput",
+    fields:()=>({
+        name:{type: new GraphQLNonNull(GraphQLString)},
+    })
+})
+
 const inputBookType=new GraphQLInputObjectType({
     name:"BookInput",
     fields:()=>({
-        id:{type: new GraphQLNonNull(GraphQLID)},
         name:{type: new GraphQLNonNull(GraphQLString)},
         genre:{type: new GraphQLNonNull(GraphQLString)},
         authorId:{type: new GraphQLNonNull(GraphQLID)},
-        publish:{
-            type: new GraphQLNonNull(inputPublishType),
-        }
+        // publish:{
+        //     type: new GraphQLNonNull(inputPublishType),
+        // }
     })
 })
 
 const Mutation=new GraphQLObjectType({
     name:"Mutuation",
     fields:()=>({
+        addAuthor:{
+            type:AuthorType,
+            args:{
+                input: {type: new GraphQLNonNull(inputAuthorType)}
+            },
+            resolve:(parent,args)=>AuthorResolvers.addAuthor(args.input)
+        },
         addBook:{
             type:BookType,
             args:{
