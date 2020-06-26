@@ -1,6 +1,6 @@
 const graphql=require('graphql')
 const AuthorResolvers=require('../Resolver/AuthorResolver');
-const AuthorResolver = require('../Resolver/AuthorResolver');
+const BookResolvers = require('../Resolver/BookResolver');
 
 const {
     GraphQLObjectType,
@@ -40,12 +40,12 @@ const BookType=new GraphQLObjectType({
     name:"Book",
     fields:()=>({
         id:{type: new GraphQLNonNull(GraphQLID)},
-        name:{type: new GraphQLNonNull(GraphQLString)},
+        title:{type: new GraphQLNonNull(GraphQLString)},
         genre:{type: new GraphQLNonNull(GraphQLString)},
         author:{
             type: AuthorType,
             resolve:(parent,args)=>{
-                return resolvers.getAuthorById(parent.authorId)
+                return AuthorResolvers.getAuthorById(parent.authorId)
             }
         },
         // publish:{
@@ -63,11 +63,11 @@ const RootQuery=new GraphQLObjectType({
         book:{
             type:BookType,
             args:{ id: { type:GraphQLID} },
-            resolve:(parent,args)=>resolvers.getById(args.id)
+            resolve:(parent,args)=>BookResolvers.getBookById(args.id)
         },
         books:{
             type: new GraphQLList(BookType),
-            resolve:(parent,args)=>resolvers.getAllBooks()
+            resolve:(parent,args)=>BookResolvers.getAllBooks()
         },
         author:{
             type: AuthorType,
@@ -98,7 +98,7 @@ const inputAuthorType= new GraphQLInputObjectType({
 const inputBookType=new GraphQLInputObjectType({
     name:"BookInput",
     fields:()=>({
-        name:{type: new GraphQLNonNull(GraphQLString)},
+        title:{type: new GraphQLNonNull(GraphQLString)},
         genre:{type: new GraphQLNonNull(GraphQLString)},
         authorId:{type: new GraphQLNonNull(GraphQLID)},
         // publish:{
@@ -122,7 +122,7 @@ const Mutation=new GraphQLObjectType({
             args:{
                 input:{type: new GraphQLNonNull(inputBookType)}
             },
-            resolve:(parent,args)=>resolvers.addBook(args.input)
+            resolve:(parent,args)=>BookResolvers.addBook(args.input)
         },
         deleteBook:{
             type:new GraphQLList(BookType),
