@@ -31,7 +31,19 @@ module.exports={
         }
     },
     getBooksByAuthorId: async(id)=>{
-
+        console.log("Gettings author books")
+        try{
+            const authorBooks = await Book.find({"authorId": id})
+            if(authorBooks){
+                console.log(authorBooks)
+                return authorBooks
+            }
+            
+        }
+        catch(error){
+            console.log("Found Error")
+            console.log(error.message)
+        }
     },
     addAuthor: async(inputData)=>{
         console.log("Adding Author")
